@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="lo">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ຈ່າຍເງິນ - ເຕີມເນັດມືຖື</title>
+    <link rel="stylesheet" href="payment.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Lao&display=swap');
+
+        body {
+            font-family: 'Noto Sans Lao', sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="payment-container">
+        <h2>ສະແກນເພື່ອຈ່າຍເງິນ</h2>
+
+        <p><strong>ໝາຍເລກອໍເດີ:</strong> <span id="orderId"></span></p>
+        <p><strong>ເບີໂທລະສັບ:</strong> <span id="phoneNumber">-</span></p>
+        <p><strong>ແພັກເກັດທີ່ສັ່ງຊື້:</strong> <span id="packageDetails">-</span></p>
+        <p><strong>ວັນທີເຮັດທຸລະກໍາ:</strong> <span id="transactionDate"></span></p>
+
+        <label for="network">ເລືອກຊ່ອງທາງການຈ່າຍເງິນ:</label>
+        <select id="network" onchange="updateQRCode()">
+            <option value="bcel">BCEL</option>
+            <option value="ldb">LDB</option>
+        </select>
+
+        <div class="qr-container">
+            <img id="qrCode" src="bcel_qr.png" alt="QR Code">
+        </div>
+
+        <button id="payBtn">ຢືນຢັນການຈ່າຍເງິນ</button>
+    </div>
+
+    <script>
+        // ຟັງຊັນດຶງຄ່າຈາກ URL
+        function getQueryParam(param) {
+            let urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param) || "ບໍ່ພົບຂໍ້ມູນ";
+        }
+
+        // ກຳນົດຂໍ້ມູນຈາກ URL ໄປຍັງໜ້າເວັບ
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("phoneNumber").textContent = getQueryParam("phone");
+            document.getElementById("packageDetails").textContent = getQueryParam("package");
+            document.getElementById("orderId").textContent = Math.floor(Math.random() * 1000000);
+            document.getElementById("transactionDate").textContent = new Date().toLocaleString("lo-LA");
+        });
+
+        // ຟັງຊັນອັບເດດ QR Code ຕາມທະນາຄານທີ່ເລືອກ
+        function updateQRCode() {
+            let selectedBank = document.getElementById("network").value;
+            document.getElementById("qrCode").src = selectedBank === "bcel" ? "bcel_qr.png" : "ldb_qr.png";
+        }
+
+        // ກວດສອບການ Screenshot
+        let screenshotTaken = false;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                screenshotTaken = true;
+            }
+        });
+
+        // ປຸ່ມຢືນຢັນການຈ່າຍເງິນ
+        document.getElementById("payBtn").addEventListener("click", function() {
+            if (!screenshotTaken) {
+                alert("😤ທ່ານຍັງບໍ່ໄດ້ຊຳລະ😤(ກະລຸນາສະແກນເພື່ອຊື້ແພັກເກັດ)"); 
+            } else {
+                // ສົ່ງໄປຫາໜ້າ bill.html ພ້ອມຂໍ້ມູນ
+                let billUrl = `bill.html?phone=${encodeURIComponent(getQueryParam("phone"))}&package=${encodeURIComponent(getQueryParam("package"))}&orderId=${document.getElementById("orderId").textContent}&transactionDate=${encodeURIComponent(document.getElementById("transactionDate").textContent)}`;
+                window.location.href = billUrl;
+            }
+        });
+    </script>
+
+</body>
+</html>
