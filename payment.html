@@ -68,7 +68,7 @@
         // ປຸ່ມຢືນຢັນການຈ່າຍເງິນ
         document.getElementById("payBtn").addEventListener("click", function() {
             if (!screenshotTaken) {
-                alert("😤ທ່ານຍັງບໍ່ໄດ້ຊຳລະ😤(ກະລຸນາສະແກນເພື່ອຊື້ແພັກເກັດ)"); 
+                alert("ຂໍອະໄພ!ທ່ານຍັງບໍ່ໄດ້ຊຳລະ(ກະລຸນາສະແກນQRເພື່ອຊື້ແພັກເກັດ)"); 
             } else {
                 // ສົ່ງໄປຫາໜ້າ bill.html ພ້ອມຂໍ້ມູນ
                 let billUrl = `bill.html?phone=${encodeURIComponent(getQueryParam("phone"))}&package=${encodeURIComponent(getQueryParam("package"))}&orderId=${document.getElementById("orderId").textContent}&transactionDate=${encodeURIComponent(document.getElementById("transactionDate").textContent)}`;
