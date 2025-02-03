@@ -1,42 +1,42 @@
-// อัปเดตราคาสกุลเงินแบบเรียลไทม์ (จำลอง)
-function updatePrices() {
-    const rows = document.querySelectorAll("tbody tr");
-    rows.forEach(row => {
-        const priceCell = row.cells[1];
-        const changeCell = row.cells[2];
-        
-        // สุ่มราคาและเปอร์เซ็นต์เปลี่ยนแปลง
-        const randomPrice = (Math.random() * 10000 + 1000).toFixed(2);
-        const randomChange = (Math.random() * 5 - 2.5).toFixed(2); // -2.5% ถึง +2.5%
-        
-        priceCell.textContent = $${randomPrice};
-        changeCell.textContent = ${randomChange}%;
-        changeCell.style.color = randomChange >= 0 ? "green" : "red";
-    });
+<button onclick="loadCustomers()">โหลดข้อมูลลูกค้า</button>
+<ul id="customerList"></ul>
+
+<script>
+function loadCustomers() {
+    fetch('get_customers.php')
+    .then(response => response.json())
+    .then(data => {
+        let list = document.getElementById('customerList');
+        list.innerHTML = "";
+        data.forEach(customer => {
+            let item = document.createElement('li');
+            item.textContent = เบอร์: ${customer.phone_number} | แพ็กเกจ: ${customer.package_details} | วันที่: ${customer.transaction_date};
+            list.appendChild(item);
+        });
+    })
+    .catch(error => console.error('Error:', error));
+}
+</script>
+
+// ตรวจสอบการเปลี่ยนภาษา
+function changeLanguage(language) {
+    window.location.href = window.location.pathname + '?lang=' + language;
 }
 
-// เรียกใช้ฟังก์ชันทุก ๆ 5 วินาที
-setInterval(updatePrices, 5000);
+// ตรวจสอบการส่งข้อมูลไปที่หน้า payment.html เมื่อกดปุ่มเติมเงิน
+document.getElementById('topup-form').addEventListener('submit', function(event) {
+    event.preventDefault(); // ป้องกันการส่งฟอร์ม
 
-// เมนูสำหรับหน้าจอขนาดเล็ก (Toggle Menu)
-const navToggle = document.querySelector(".nav-toggle");
-const navMenu = document.querySelector("header nav ul");
+    var phone = document.getElementById('phone').value;
+    var packageAmount = document.getElementById('amount').value;
 
-navToggle.addEventListener("click", () => {
-    navMenu.classList.toggle("visible");
-});
-
-// เลื่อนกลับไปด้านบน (Scroll to Top)
-const scrollTopButton = document.querySelector(".scroll-top");
-
-window.addEventListener("scroll", () => {
-    if (window.scrollY > 300) {
-        scrollTopButton.style.display = "block";
-    } else {
-        scrollTopButton.style.display = "none";
+    // หากกรอกข้อมูลไม่ครบ จะไม่ทำการส่ง
+    if (!phone || !packageAmount) {
+        alert('กรุณากรอกข้อมูลให้ครบ');
+        return;
     }
-});
 
-scrollTopButton.addEventListener("click", () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    // ส่งข้อมูลไปยัง payment.html
+    var paymentUrl = payment.html?phone=${encodeURIComponent(phone)}&package=${encodeURIComponent(packageAmount)};
+    window.location.href = paymentUrl;
 });
